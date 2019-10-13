@@ -1,0 +1,109 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int* makeDeck();
+void shuffleDeck(int* deck);
+void dealCard(int* deck, int* player, int* dealer, int& index, int& top);
+void displayCards(int* player, int* dealer, int index);
+void printSymbol(int card);
+
+int main(){
+    cout<<"Shuffle: [n | u <seed>]:";
+    char shuffle;
+    cin>>shuffle;
+
+    //makedeck
+    int* deck = makeDeck();
+
+    //if shuffle
+    if(shuffle == 'u'){
+        //get seed
+        int seed;
+        cin>>seed;
+        srand(seed);
+        
+        //shuffle 
+        shuffleDeck(deck);
+    }
+
+    //round 1
+        //player and dealer hands, top card of deck 
+        int* player = new int[5];
+        int* dealer = new int[5];
+        int topcard = 0;
+        int index = 0; 
+
+        //deal 2 cards & display the hands
+        dealCard(deck, player, dealer, index, topcard);
+        dealCard(deck, player, dealer, index, topcard);
+        displayCards(player, dealer, index);
+
+    
+}
+
+int* makeDeck(){
+    int decksize = 52;
+    int* deck = new int[decksize];
+    int cardvalue;
+    int i = 0; 
+    for(int suitvalue = 1; suitvalue<5; suitvalue++){
+        for(int facevalue = 2; facevalue<15; facevalue++){
+            cardvalue = facevalue + 100*suitvalue;
+            deck[i] = cardvalue;
+            i++;
+        }
+    }
+    return deck;
+}
+
+void shuffleDeck(int* deck){
+    for(int i = 0; i<52; i++){
+        int j = rand()%52;
+        int temp = deck[i];
+        deck[i] = deck[j];
+        deck[j] = temp;
+    }
+}
+
+void dealCard(int* deck, int* player, int* dealer, int& index, int& top){
+    player[index] = deck[top];
+    top++;
+    dealer[index] = deck[top];
+    top++;
+    index++;
+
+}
+
+void displayCards(int* player, int* dealer, int index){
+    for(int i = 0; i<index; i++){
+        cout<<"| ";
+        printSymbol(player[i]);
+        cout<<"  | ";
+        printSymbol(dealer[i]);
+        cout<<" |"<<endl;
+    }
+
+}
+
+void printSymbol(int card){
+    string suit[4] = {"\u2663","\u2666","\u2665","\u2660"};
+    int facevalue = card % 100;
+    int suitvalue = card / 100;
+    if(facevalue == 10 || facevalue ==11){
+        if(facevalue == 11)
+            cout<<" "<<'J'<<suit[suitvalue-1];
+        else
+            cout<<facevalue<<suit[suitvalue-1];
+    }
+    else if(facevalue<10 || facevalue > 11)
+        
+        if(facevalue == 12)
+            cout<<" "<<'Q'<<suit[suitvalue-1];
+        else if(facevalue == 13)
+            cout<<" "<<'K'<<suit[suitvalue-1];
+        else if(facevalue == 14)
+            cout<<" "<<'A'<<suit[suitvalue-1];
+        else
+            cout<<" "<<facevalue<<suit[suitvalue-1];
+}
