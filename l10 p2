@@ -1,0 +1,50 @@
+#include <iostream>
+#include <unistd.h>
+#include <cstdlib>
+#include "easycurses.h"
+using namespace std;
+
+int main(){
+  //get number of characters
+  int n;
+  cin>>n;
+
+  //get characters
+  //declare struct
+  struct character{
+    char point;
+    int row, col;
+  };
+
+  char j;
+  //store input values
+  character* characters = new character[n];
+  for(int i = 0; i<n; i++){
+    cin>>characters[i].point>>j>>characters[i].row>>j>>characters[i].col>>j;
+    //cout<<characters[i].point<<characters[i].row<<characters[i].col<<endl;
+  }
+
+  //start ncurses
+  startCurses();
+
+  // Loop forever until user enters 'q'
+  char c;
+  do {
+    //draw each object to the screen using drawchar and refresh with 0.8 second time delay
+    for(int i = 0; i<n; i++){
+      drawCharAndRefresh(characters[i].point, characters[i].row, characters[i].col);
+      usleep(800000);
+    }
+
+    for(int i = 0; i<n; i++){
+      drawChar(' ', characters[i].row, characters[i].col);
+    }
+
+    refreshWindow();
+    usleep(800000);
+
+    c = inputChar();
+  } while ( c!= 'q' );
+
+  endCurses();
+}
