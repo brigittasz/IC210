@@ -1,0 +1,63 @@
+#include <iostream>
+#include <unistd.h>
+#include <cstdlib>
+#include "easycurses.h"
+using namespace std;
+
+int main(){
+// read your characters as in part 2
+  //get number of characters
+  int n;
+  cin>>n;
+
+  //get characters
+  //declare struct
+  struct character{
+    char point;
+    int row, col;
+  };
+
+  char j;
+  //store input values
+  character* characters = new character[n];
+  for(int i = 0; i<n; i++){
+    cin>>characters[i].point>>j>>characters[i].row>>j>>characters[i].col>>j;
+    //cout<<characters[i].point<<characters[i].row<<characters[i].col<<endl;
+  }
+  startCurses();
+  // draw them with drawChar() calls
+  for(int i = 0; i<n; i++){
+    drawChar(characters[i].point, characters[i].row, characters[i].col);
+  }
+  // call refreshWindow() (only once) to show what you drew on the screen
+  refreshWindow();
+  // sleep for 80,000 micro-seconds (i.e., 0.08 sec).
+  usleep(800000);
+
+  for(int frame=0; frame < 20; frame++)
+  {
+    // 1. Move all characters one step:
+    //   a. erase them in the old positions with drawChar() calls
+    for(int i = 0; i<n; i++){
+      drawChar(' ', characters[i].row, characters[i].col);
+    }
+    //   b. compute the new positions for characters (based on the direction of each character)
+    for(int i = 0; i<n; i++){
+      characters[i].col +=1;
+      //cerr<<i<<" "<<characters[i].row<<" "<<characters[i].col<<endl;
+    }
+    //   c. draw them in the new positions with drawChar() calls
+    for(int i = 0; i<n; i++){
+      drawChar(characters[i].point, characters[i].row, characters[i].col);
+    }
+    // 2. Call refreshWindow() (only once) to show what you drew on the screen
+    refreshWindow();
+
+    usleep(80000); // sleep for 80,000 micro-seconds (i.e., 0.08 sec).
+                   // This corresponds to flipping to the next "frame" in an animation.
+                   // The program is drawing about 12.5 (= 1/0.08) frames per second.*/
+  }
+
+// exit the program right away; you don't need to take any user input
+return 0;
+}
